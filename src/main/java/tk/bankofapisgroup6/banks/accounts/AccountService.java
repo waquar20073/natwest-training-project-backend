@@ -27,32 +27,6 @@ public class AccountService implements UserDetailsService{
 		return balance;
 		
 	}
-	// get account details
-	// login
-	public String getApiToken(String username, String password) {
-		/** return api_token on successful login */
-		Optional<Account> account = accountRepository.findByUsername(username);
-		String response = null;
-		if(!account.isPresent()) {
-			response = "Account Not Present";
-		}else if(account.get().getPassword().equals(password)) {
-			response = account.get().getApiKey();
-		}else {
-			response = "Invalid Password";
-		}
-		return response;
-	}
-	
-	public Account getAccount(long id) {
-		Optional<Account> account = accountRepository.findById(id);
-		Account response = null;
-		if(account.isPresent()) {
-			response = account.get();
-		}else {
-			throw new IllegalStateException("Account not found");
-		}
-		return response;
-	}
 	
 	public Account login(String username, String password) {
 		Optional<Account> account = accountRepository.findByUsername(username);
@@ -81,13 +55,26 @@ public class AccountService implements UserDetailsService{
 		}
 		return user;
 	}
+
 	
-	public Double getMonthExpense(String month) {
-		return 0.0d;
+	public UserDetails loadUserById(long accountId) {
+		Optional<Account> account = accountRepository.findByAccountId(accountId);
+		if(account.isPresent()) {
+			return account.get();
+		}else {
+			throw new IllegalStateException("Account Id not Found");
+		}
 	}
-	
-	public Double getMonthIncome(String month) {
-		return 0.0d;
+
+	public double updateBalance(long accountId, double amount) {
+		Optional<Account> account = accountRepository.findByAccountId(accountId);
+		if(account.isPresent()) {
+			double balance = account.get().getBalance();
+			balance = balance+amount;
+			return accountRepository.updateBalance(accountId, balance);
+		}else {
+			throw new IllegalStateException("Account Id not Found");
+		}
 	}
 
 	public int creditAmount(long accountId, Double creditAmount){

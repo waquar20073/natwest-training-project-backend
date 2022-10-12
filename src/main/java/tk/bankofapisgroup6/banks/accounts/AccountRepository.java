@@ -11,6 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AccountRepository extends JpaRepository<Account, Long>{
 	Optional<Account> findByUsername(String username);
 	Optional<Account> findByAccountId(long accountId);
+	
+	@Transactional
+    @Modifying
+	@Query("UPDATE Account a " +
+		            "SET a.balance = ?2 WHERE a.accountId = ?1")
+	int updateBalance(long accountId, double balance);
 
 	@Transactional
 	@Modifying

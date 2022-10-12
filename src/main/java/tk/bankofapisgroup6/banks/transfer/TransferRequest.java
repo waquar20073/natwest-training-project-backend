@@ -12,7 +12,4 @@ import lombok.ToString;
 public class TransferRequest {
     private long accountNo;
     private Double amount;
-
-
-
 }
