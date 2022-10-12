@@ -89,4 +89,13 @@ public class AccountService implements UserDetailsService{
 	public Double getMonthIncome(String month) {
 		return 0.0d;
 	}
+
+	public int creditAmount(long accountId, Double creditAmount){
+		return accountRepository.creditAmount(accountId, creditAmount);
+	}
+
+	public int debitAmount(long accountId, Double debitAmount){
+		return accountRepository.debitAmount(accountId, debitAmount);
+	}
+
 }
