@@ -1,4 +1,4 @@
-package tk.bankofapisgroup6.banks.transactionhistoryservice;
+package tk.bankofapisgroup6.banks.analytics;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -7,14 +7,14 @@ import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString
-public class RequestTransaction {
+public class Request {
 	long accountId;
-
-	public RequestTransaction() {
+	
+	public Request() {
 		super();
 	}
 
-	public RequestTransaction(long accountId) {
+	public Request(long accountId) {
 		super();
 		this.accountId = accountId;
 	}
@@ -26,6 +26,4 @@ public class RequestTransaction {
 	public void setAccountId(long accountId) {
 		this.accountId = accountId;
 	}
-	
-	
 }

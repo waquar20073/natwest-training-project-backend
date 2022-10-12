@@ -20,3 +20,8 @@ DROP TABLE transaction;
 DROP TABLE sbi.account;
 SELECT * FROM account;
 SELECT * FROM transaction;
+
+UPDATE `sbi`.`transaction`
+SET
+`timestamp` = '2022-09-12 05:36:14.239000'
+WHERE `id` = 3;

@@ -28,16 +28,35 @@ public class TransactionHistoryService implements TransactionHistoryServiceInter
 			throw new IllegalStateException(e.getLocalizedMessage());
 			//"AccountID Not Found during add Transaction";
 		}
+		double amount = 0.0d;
+		if(transactiondto.getType()==TransactionType.debit &&transactiondto.getAmount()<0) {
+			amount = transactiondto.getAmount();
+		}else {
+			amount = transactiondto.getAmount()*-1;
+		}
 		Transaction transaction = new Transaction(
 				transactiondto.getTransactionWith(),
 				account, transactiondto.getType(),
-				transactiondto.getAmount());
+				amount);
 		return transactionHistoryRepository.save(transaction);
 	}
 
-	@Override
-	public List<Transaction> findBetween(Date fromDate, Date toDate) {
-
+	public List<Transaction> findBetween(Date fromDate, Date toDate, long accountId) {
+//		if(fromDate!=null && toDate!=null) {
+//			transactionHistoryRepository.findTransactionsFromTo(accountId,null,null);
+//		}
+//		else if(fromDate==null && toDate==null) {
+//			// get all transactions
+//			return getTransactions(accountId);
+//		}else if(fromDate!=null) {
+//			// hence toDate is null
+//			transactionHistoryRepository.findTransactionsFrom(accountId,null);
+//		}else {
+//			// fromDate is null
+//			transactionHistoryRepository.findTransactionsTo(accountId,null);
+//		}
+//		
+//		return null;
 		return null;
 	}
 
@@ -48,8 +67,16 @@ public class TransactionHistoryService implements TransactionHistoryServiceInter
 		return null;
 	}
 
-	public List<Transaction> getTransactions(String username, String token) {
-		return transactionHistoryRepository.findAll();
+	public List<Transaction> getTransactions(long accountId) {
+		return transactionHistoryRepository.findAccountById(accountId);
+	}
+	
+	public Double getExpenses(long accountId) {
+		return transactionHistoryRepository.findExpense(accountId);
+	}
+
+	public Double getIncomes(long accountId) {
+		return transactionHistoryRepository.findIncome(accountId);
 	}
 
 }

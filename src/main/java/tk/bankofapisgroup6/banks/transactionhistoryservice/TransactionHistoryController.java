@@ -23,8 +23,13 @@ public class TransactionHistoryController {
 	@GetMapping
 	public ResponseEntity<List<Transaction>> getTransactions(@RequestBody RequestTransaction requestTransaction){
 		ResponseEntity<List<Transaction>> response = null;
+		try {
 		response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
-				.getTransactions(requestTransaction.getUsername(),requestTransaction.getToken()));
+				.getTransactions(requestTransaction.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+		}
 		return response;
 	}
 	
@@ -38,9 +43,70 @@ public class TransactionHistoryController {
 		}
 	}
 	
-	@GetMapping("balance")
-	public ResponseEntity<Double> getBalance(@RequestBody RequestTransaction requestTransaction){
-		/* todo : convert from string to double */
+	
+	@GetMapping("expenses")
+	public ResponseEntity<Double> getExpenses(@RequestBody RequestTransaction requestTransaction){
+		ResponseEntity<Double> response = null;
+		try {
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(transactionHistoryService.getExpenses(requestTransaction.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+		}
+		return response;
+	}
+	
+	@GetMapping("incomes")
+	public ResponseEntity<Double> getIncomes(@RequestBody RequestTransaction requestTransaction){
+		ResponseEntity<Double> response = null;
+		try {
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(transactionHistoryService.getIncomes(requestTransaction.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+		}
+		return response;
+	}
+	
+	@GetMapping("fromdate")
+	public ResponseEntity<List<Transaction>> getFromDate(@RequestBody RequestTransaction requestTransaction){
+//		ResponseEntity<List<Transaction>> response = null;
+//		try {
+//		response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
+//				.(requestTransaction.getAccountId()));
+//		}catch(Exception e) {
+//			e.getLocalizedMessage();
+//			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+//		}
+//		return response;
+		return null;
+	}
+	
+	@GetMapping("todate")
+	public ResponseEntity<List<Transaction>> getToDate(@RequestBody RequestTransaction requestTransaction){
+//		ResponseEntity<List<Transaction>> response = null;
+//		try {
+//		response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
+//				.(requestTransaction.getAccountId()));
+//		}catch(Exception e) {
+//			e.getLocalizedMessage();
+//			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+//		}
+//		return response;
+		return null;
+	}
+	
+	@GetMapping("betweendate")
+	public ResponseEntity<List<Transaction>> getBetweenDate(@RequestBody RequestTransaction requestTransaction){
+//		ResponseEntity<List<Transaction>> response = null;
+//		try {
+//		response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
+//				.(requestTransaction.getAccountId()));
+//		}catch(Exception e) {
+//			e.getLocalizedMessage();
+//			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+//		}
+//		return response;
 		return null;
 	}
 }
