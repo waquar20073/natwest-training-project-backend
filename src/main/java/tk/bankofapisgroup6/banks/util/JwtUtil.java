@@ -20,8 +20,8 @@ public class JwtUtil {
 	public static final long JWT_TOKEN_VALIDITY = 1000*60*60; // 1 hour
     private String SECRET_KEY = "R$08nga2421@";
     
-    public String getUsernameFromToken(String token) {
-    	return extractClaim(token, Claims::getSubject);
+    public long getIdFromToken(String token) {
+    	return Long.parseLong(extractClaim(token, Claims::getSubject));
     }
     
     public Date getExpirationDateFromToken(String token) {
@@ -35,7 +35,7 @@ public class JwtUtil {
     
     public String generateToken(Account account) {
     	Map<String, Object> claims = new HashMap<>();
-    	return doGenerateToken(claims,account.getUsername());
+    	return doGenerateToken(claims,String.valueOf(account.getAccountId()));
     }
     
 
@@ -45,9 +45,9 @@ public class JwtUtil {
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
 	}
     
-    public boolean validateToken(String token, UserDetails userDetails) {
-    	final String username = getUsernameFromToken(token);
-    	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public boolean validateToken(String token, Account userDetails) {
+    	final long accountId = getIdFromToken(token);
+    	return (accountId==userDetails.getAccountId() && !isTokenExpired(token));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -56,13 +56,6 @@ public class JwtUtil {
     }
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    }
-
-    private String createToken(Map<String, Object> claims, String subject) {
-
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
 }

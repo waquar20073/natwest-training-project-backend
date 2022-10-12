@@ -17,6 +17,7 @@ import lombok.ToString;
 @Setter
 public class RequestTransactionByDate {
 	long accountId;
-	Date from;
-	Date to;
+	String from;
+	String to;
+	
 }

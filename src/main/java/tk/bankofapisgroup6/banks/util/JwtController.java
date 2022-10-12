@@ -1,5 +1,7 @@
 package tk.bankofapisgroup6.banks.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ public class JwtController {
 	private AccountService accountService;
 	@Autowired
 	private JwtUtil jwtUtil;
+	private static Logger logger = LoggerFactory.getLogger(JwtController.class);
 	
 	@PostMapping(path="token")
 	public ResponseEntity<?> generateToken(@RequestBody JwtREquest jwtrequest){
@@ -39,6 +42,7 @@ public class JwtController {
 		}
 		
 		String token = jwtUtil.generateToken(account);
+		logger.info("Token Generated");
 		return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(token));
 	}
 }

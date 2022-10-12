@@ -1,15 +1,11 @@
 package tk.bankofapisgroup6.banks.transactionhistoryservice;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
-
-import tk.bankofapisgroup6.banks.accounts.Account;
 
 public interface TransactionHistoryRepository extends JpaRepository<Transaction, Long>{
 	
@@ -30,10 +26,12 @@ public interface TransactionHistoryRepository extends JpaRepository<Transaction,
 			+"AND YEAR(t.timestamp) = YEAR(CURRENT_DATE()) AND t.account.accountId=?1 AND t.type=0")
 	Double findIncome(long accountId);
 
-	
-//	void findTransactionsFromTo(long accountId, Date From, Date to);
-//
-//	void findTransactionsTo(long accountId, Date to);
-//
-//	void findTransactionsFrom(long accountId, Date from);
+	@Query("SELECT t FROM Transaction t WHERE date_format(t.timestamp, '%Y-%m-%d')>=?2 AND date_format(t.timestamp, '%Y-%m-%d')<=?3 AND t.account.accountId=?1")
+	List<Transaction> findTransactionsFromTo(long accountId, String From, String to);
+
+	@Query("SELECT t FROM Transaction t WHERE date_format(t.timestamp, '%Y-%m-%d')<=?2 AND t.account.accountId=?1" ) 
+	List<Transaction> findTransactionsTo(long accountId, String to);
+
+	@Query("SELECT t FROM Transaction t WHERE date_format(t.timestamp, '%Y-%m-%d')>=?2 AND t.account.accountId=?1" ) 
+	List<Transaction> findTransactionsFrom(long accountId, String from);
 }
