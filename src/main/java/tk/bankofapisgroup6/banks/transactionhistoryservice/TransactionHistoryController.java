@@ -28,7 +28,7 @@ public class TransactionHistoryController {
 	private TransactionHistoryService transactionHistoryService;
 	@Autowired
 	private JwtUtil jwutil;
-	private static Logger logger = LoggerFactory.getLogger(TransactionHistoryService.class);
+	private static Logger logger = LoggerFactory.getLogger(TransactionHistoryController.class);
 	
 	private boolean validateToken(Map<String, String> headers, long requestAccountId) {
 		String accessToken = headers.get("authorization").substring(7);
