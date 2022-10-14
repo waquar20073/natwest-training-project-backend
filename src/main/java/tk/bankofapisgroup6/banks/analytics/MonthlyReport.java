@@ -20,10 +20,11 @@ public class MonthlyReport {
 	List<DailyTransfer> daily = new ArrayList<>();
 	TransactionType type;
 	String month;
+	int countDays;
 	
-	public void setDaily(double []daily) {
+	public void setDaily(double []daily, List<Integer> dates) {
 		for(int i=1;i<daily.length;i++) {
-			this.daily.add(new DailyTransfer(i,daily[i]));
+			this.daily.add(new DailyTransfer(dates.get(i-1),daily[i]));
 		}
 	}
 }

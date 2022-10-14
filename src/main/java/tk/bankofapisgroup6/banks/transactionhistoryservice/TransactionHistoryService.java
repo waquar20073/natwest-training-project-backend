@@ -2,6 +2,7 @@ package tk.bankofapisgroup6.banks.transactionhistoryservice;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,14 @@ public class TransactionHistoryService implements TransactionHistoryServiceInter
 
 	public List<Transaction> getTransactions(long accountId) {
 		return transactionHistoryRepository.findAccountById(accountId);
+	}
+	
+	public List<Transaction> getTenTransactions(long accountId) {
+		List<Transaction> trans = transactionHistoryRepository.findAccountById(accountId);
+		if(trans.size()>=10) {
+			trans = trans.subList(0, 10);
+		}
+		return trans;
 	}
 	
 	public Double getExpenses(long accountId) {

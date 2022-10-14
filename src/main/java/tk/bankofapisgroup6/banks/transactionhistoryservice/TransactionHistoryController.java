@@ -79,6 +79,22 @@ public class TransactionHistoryController {
 		return response;
 	}
 	
+	@PostMapping("tentransactions")
+	public ResponseEntity<List<Transaction>> getTenTransactions(@RequestHeader Map<String, String> headers, @RequestBody RequestTransaction requestTransaction){
+		
+		if(!validateToken(headers,requestTransaction.getAccountId())) {
+			throw new IllegalStateException("Token not valid");
+		}
+		ResponseEntity<List<Transaction>> response = null;
+		try {
+		response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
+				.getTenTransactions(requestTransaction.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+		}
+		return response;
+	}
 	
 	@PostMapping
 	public ResponseEntity<List<Transaction>> getTransactions(@RequestHeader Map<String, String> headers, @RequestBody RequestTransaction requestTransaction){

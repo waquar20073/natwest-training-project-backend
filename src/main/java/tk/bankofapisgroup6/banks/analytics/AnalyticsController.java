@@ -68,6 +68,38 @@ public class AnalyticsController {
 		return response;
 	}
 	
+	@PostMapping(path="sevendayincomes")
+	public ResponseEntity<MonthlyReport> getSevenIncomeReport(@RequestHeader Map<String, String> headers, @RequestBody Request account){
+		if(!validateToken(headers,account.getAccountId())) {
+			throw new IllegalStateException("Token not valid");
+		}
+		ResponseEntity<MonthlyReport> response=null;
+		try {
+			response = ResponseEntity.status(HttpStatus.OK).body(analyticsService.getSevenIncomeReport(account.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(analyticsService.getIncomeReport(account.getAccountId()));
+		}
+		return response;
+	}
+	
+	@PostMapping(path="sevendayexpenses")
+	public ResponseEntity<MonthlyReport> getSevenExpenseReport(@RequestHeader Map<String, String> headers, @RequestBody Request account){
+		if(!validateToken(headers,account.getAccountId())) {
+			throw new IllegalStateException("Token not valid");
+		}
+		ResponseEntity<MonthlyReport> response=null;
+		
+		try {
+			response = ResponseEntity.status(HttpStatus.OK).body(analyticsService.getSevenExpenseReport(account.getAccountId()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			e.printStackTrace();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(analyticsService.getExpenseReport(account.getAccountId()));
+		}
+		return response;
+	}
+	
 	@PostMapping(path="expensepartners")
 	public ResponseEntity<TradingPartnerReport> getExpensePartner(@RequestHeader Map<String, String> headers, @RequestBody Request account){
 		if(!validateToken(headers,account.getAccountId())) {
