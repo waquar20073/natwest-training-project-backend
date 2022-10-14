@@ -34,4 +34,36 @@ public interface TransactionHistoryRepository extends JpaRepository<Transaction,
 
 	@Query("SELECT t FROM Transaction t WHERE date_format(t.timestamp, '%Y-%m-%d')>=?2 AND t.account.accountId=?1" ) 
 	List<Transaction> findTransactionsFrom(long accountId, String from);
+	
+	@Query("SELECT t FROM Transaction t WHERE "
+			+ "t.transactionWith LIKE ?4 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')>=?2 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')<=?3 AND "
+			+ "t.account.accountId=?1 "
+			+ "order by timestamp")
+	List<Transaction> filterAndOrderByTime(long accountId, String from, String to, String search);
+	
+	@Query("SELECT t FROM Transaction t WHERE "
+			+ "t.transactionWith LIKE ?4 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')>=?2 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')<=?3 AND "
+			+ "t.account.accountId=?1 "
+			+ "order by timestamp DESC")
+	List<Transaction> filterAndOrderByTimeDesc(long accountId, String from, String to, String search);
+	
+	@Query("SELECT t FROM Transaction t WHERE "
+			+ "t.transactionWith LIKE ?4 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')>=?2 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')<=?3 AND "
+			+ "t.account.accountId=?1 "
+			+ "order by amount")
+	List<Transaction> filterAndOrderByAmount(long accountId, String from, String to, String search);
+	
+	@Query("SELECT t FROM Transaction t WHERE "
+			+ "t.transactionWith LIKE ?4 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')>=?2 AND "
+			+ "date_format(t.timestamp, '%Y-%m-%d')<=?3 AND "
+			+ "t.account.accountId=?1 "
+			+ "order by amount DESC")
+	List<Transaction> filterAndOrderByAmountDesc(long accountId, String from, String to, String search);
 }

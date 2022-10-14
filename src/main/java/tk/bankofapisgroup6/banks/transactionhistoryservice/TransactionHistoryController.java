@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,6 +22,7 @@ import tk.bankofapisgroup6.banks.util.JwtUtil;
 
 @AllArgsConstructor
 @RequestMapping(path="api/v1/transactions")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
 public class TransactionHistoryController {
 	@Autowired
@@ -36,7 +37,50 @@ public class TransactionHistoryController {
 		return accountId==requestAccountId;
 	}
 	
-	@GetMapping
+	@PostMapping("transactionfilter") 
+	ResponseEntity<List<Transaction>> filterTransactions(@RequestHeader Map<String, String> headers, @RequestBody TransactionFilter requestTransaction){
+		ResponseEntity<List<Transaction>> response = null;
+		try {
+			logger.info("Request: "+requestTransaction.toString());
+			String fromDate=null;
+			if(requestTransaction.getFrom()==null || requestTransaction.getFrom().length()<10) {
+				fromDate="1900-01-01"; // default date
+			}else {
+				fromDate=requestTransaction.getFrom().substring(0,10);
+			}
+			String toDate=null;
+			if(requestTransaction.getTo()==null || requestTransaction.getTo().length()<10) {
+				toDate=LocalDate.now().toString(); // default date
+			}else {
+				toDate=requestTransaction.getTo().substring(0,10);
+			}
+			if(!validateToken(headers,requestTransaction.getAccountId())) {
+				throw new IllegalStateException("Token not valid");
+			}
+			String search=null;
+			if(requestTransaction.getSearch()==null) {
+				search=""; // default date
+			}else {
+				search=requestTransaction.getSearch();
+			}
+			if(!validateToken(headers,requestTransaction.getAccountId())) {
+				throw new IllegalStateException("Token not valid");
+			}
+			response = ResponseEntity.status(HttpStatus.OK).body(transactionHistoryService
+				.filterTransactions(requestTransaction.getAccountId(),
+						fromDate,
+						toDate,
+						search,
+						requestTransaction.getSortBy()));
+		}catch(Exception e) {
+			e.getLocalizedMessage();
+			response = ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+		}
+		return response;
+	}
+	
+	
+	@PostMapping
 	public ResponseEntity<List<Transaction>> getTransactions(@RequestHeader Map<String, String> headers, @RequestBody RequestTransaction requestTransaction){
 		
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
@@ -67,7 +111,7 @@ public class TransactionHistoryController {
 	}
 	
 	
-	@GetMapping("expenses")
+	@PostMapping("expenses")
 	public ResponseEntity<Double> getExpenses(@RequestHeader Map<String, String> headers, @RequestBody RequestTransaction requestTransaction){
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -82,7 +126,7 @@ public class TransactionHistoryController {
 		return response;
 	}
 	
-	@GetMapping("incomes")
+	@PostMapping("incomes")
 	public ResponseEntity<Double> getIncomes(@RequestHeader Map<String, String> headers, @RequestBody RequestTransaction requestTransaction){
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -97,7 +141,7 @@ public class TransactionHistoryController {
 		return response;
 	}
 	
-	@GetMapping("fromdate")
+	@PostMapping("fromdate")
 	public ResponseEntity<List<Transaction>> getFromDate(@RequestHeader Map<String, String> headers, @RequestBody RequestTransactionByDate requestTransaction){
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -114,7 +158,7 @@ public class TransactionHistoryController {
 		return response;
 	}
 	
-	@GetMapping("todate")
+	@PostMapping("todate")
 	public ResponseEntity<List<Transaction>> getToDate(@RequestHeader Map<String, String> headers, @RequestBody RequestTransactionByDate requestTransaction){
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -132,7 +176,7 @@ public class TransactionHistoryController {
 		return response;
 	}
 	
-	@GetMapping("betweendate")
+	@PostMapping("betweendate")
 	public ResponseEntity<List<Transaction>> getBetweenDate(@RequestHeader Map<String, String> headers, @RequestBody RequestTransactionByDate requestTransaction){
 		if(!validateToken(headers,requestTransaction.getAccountId())) {
 			throw new IllegalStateException("Token not valid");

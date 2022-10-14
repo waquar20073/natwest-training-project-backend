@@ -79,4 +79,23 @@ public class TransactionHistoryService implements TransactionHistoryServiceInter
 		return transactionHistoryRepository.findIncome(accountId);
 	}
 
+	public List<Transaction> filterTransactions(long accountId, String fromDate, String toDate, String search, String sortBy) {
+		List<Transaction> trans = null;
+		try {
+			if(sortBy.equals("timestamp")) {
+				trans = transactionHistoryRepository.filterAndOrderByTime(accountId, fromDate, toDate, "%"+search+"%");
+			}else if(sortBy.equals("timestamp desc")) {
+				trans = transactionHistoryRepository.filterAndOrderByTimeDesc(accountId, fromDate, toDate, "%"+search+"%");
+			}else if(sortBy.equals("amount")) {
+				trans = transactionHistoryRepository.filterAndOrderByAmount(accountId, fromDate, toDate, "%"+search+"%");
+			}else if(sortBy.equals("amount desc")) {
+				trans = transactionHistoryRepository.filterAndOrderByAmountDesc(accountId, fromDate, toDate, "%"+search+"%");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new IllegalStateException("cant filter transactions");
+		}
+		
+		return trans;
+	}
 }

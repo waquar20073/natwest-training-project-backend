@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,9 @@ public class AnalyticsService {
 			if(t.getType().ordinal()==TransactionType.debit.ordinal()) {
 				expenses[t.getTimestamp().getDate()]+=t.getAmount();	
 			}
+		}
+		for(int i=0;i<expenses.length;i++) {
+			expenses[i]*=-1;
 		}
 		MonthlyReport report = new MonthlyReport();
 		report.setDaily(expenses);
@@ -95,6 +99,7 @@ public class AnalyticsService {
 		
 		List<Transaction> transactions = analyticsRepository.findByMonth(accountId);
 		Map<String,Integer> frequency = new HashMap<String,Integer>();
+		List<Partner> partnerData = new ArrayList<>();
 		
 		for(Transaction t: transactions) {
 			if(t.getType().ordinal()==TransactionType.debit.ordinal()) {
@@ -104,8 +109,12 @@ public class AnalyticsService {
 			    frequency.put(t.getTransactionWith(),f+1);
 			}
 		}
+		for (Map.Entry<String,Integer> entry : frequency.entrySet())  {
+			partnerData.add(new Partner(entry.getKey(),entry.getValue()));
+			
+		}
 		TradingPartnerReport report = new TradingPartnerReport();
-		report.setFrequency(frequency);
+		report.setData(partnerData);
 		report.setType(TransactionType.debit);
 		report.setMonth(currentDate.getMonth().toString());
 		return report;
@@ -127,18 +136,23 @@ public class AnalyticsService {
 
 		List<Transaction> transactions = analyticsRepository.findByMonth(accountId);
 		Map<String,Integer> frequency = new HashMap<String,Integer>();
+		List<Partner> partnerData = new ArrayList<>();
 		
 		for(Transaction t: transactions) {
-			if(t.getType().ordinal()==TransactionType.credit.ordinal()) {
+			if(t.getType().ordinal()==TransactionType.debit.ordinal()) {
 				Integer f = frequency.get(t.getTransactionWith());
 				 //checking null
 			    if(f==null) f=0;
 			    frequency.put(t.getTransactionWith(),f+1);
 			}
 		}
+		for (Map.Entry<String,Integer> entry : frequency.entrySet())  {
+			partnerData.add(new Partner(entry.getKey(),entry.getValue()));
+			
+		}
 		TradingPartnerReport report = new TradingPartnerReport();
-		report.setFrequency(frequency);
-		report.setType(TransactionType.credit);
+		report.setData(partnerData);
+		report.setType(TransactionType.debit);
 		report.setMonth(currentDate.getMonth().toString());
 		return report;
 	}

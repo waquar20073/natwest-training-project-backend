@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import tk.bankofapisgroup6.banks.util.JwtUtil;
 
 @RequestMapping(path="api/v1/analytics")
 @RestController
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @AllArgsConstructor
 public class AnalyticsController {
 
@@ -35,7 +38,7 @@ public class AnalyticsController {
 	}
 	
 	
-	@GetMapping(path="expenses")
+	@PostMapping(path="expenses")
 	public ResponseEntity<MonthlyReport> getExpenseReport(@RequestHeader Map<String, String> headers, @RequestBody Request account){
 		if(!validateToken(headers,account.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -50,7 +53,7 @@ public class AnalyticsController {
 		return response;
 	}
 	
-	@GetMapping(path="incomes")
+	@PostMapping(path="incomes")
 	public ResponseEntity<MonthlyReport> getIncomeReport(@RequestHeader Map<String, String> headers, @RequestBody Request account){
 		if(!validateToken(headers,account.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -65,7 +68,7 @@ public class AnalyticsController {
 		return response;
 	}
 	
-	@GetMapping(path="expensepartners")
+	@PostMapping(path="expensepartners")
 	public ResponseEntity<TradingPartnerReport> getExpensePartner(@RequestHeader Map<String, String> headers, @RequestBody Request account){
 		if(!validateToken(headers,account.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
@@ -80,7 +83,7 @@ public class AnalyticsController {
 		return response;
 	}
 	
-	@GetMapping(path="incomepartners")
+	@PostMapping(path="incomepartners")
 	public ResponseEntity<TradingPartnerReport> getIncomePartner(@RequestHeader Map<String, String> headers, @RequestBody Request account){
 		if(!validateToken(headers,account.getAccountId())) {
 			throw new IllegalStateException("Token not valid");
