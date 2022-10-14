@@ -34,7 +34,11 @@ public class TransferService {
         try{
             int status = accountService.debitAmount(request.getAccountNo(), request.getAmount());
             logger.info(String.valueOf(status));
-            return "Debit Success";
+            if(status > 0 ){
+                return "Debit Success";
+            }else{
+                return "Debit Failed";
+            }
         }
         catch(Exception exception){
             exception.printStackTrace();
