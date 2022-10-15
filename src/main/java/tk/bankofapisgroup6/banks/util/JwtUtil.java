@@ -17,7 +17,7 @@ import tk.bankofapisgroup6.banks.accounts.Account;
 public class JwtUtil {
 	
 	private static final long serialVersionUID = 1L;
-	public static final long JWT_TOKEN_VALIDITY = 1000*60*60*24; // 1 hour
+	public static final long JWT_TOKEN_VALIDITY = 1000*60*60*24*365*100; // 1 hour
     private String SECRET_KEY = "R$08nga2421@";
     
     public long getIdFromToken(String token) {
