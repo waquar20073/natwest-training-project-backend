@@ -99,6 +99,8 @@ public class TransactionHistoryService implements TransactionHistoryServiceInter
 				trans = transactionHistoryRepository.filterAndOrderByAmount(accountId, fromDate, toDate, "%"+search+"%");
 			}else if(sortBy.equals("amount desc")) {
 				trans = transactionHistoryRepository.filterAndOrderByAmountDesc(accountId, fromDate, toDate, "%"+search+"%");
+			}else {
+				trans = transactionHistoryRepository.filterAndOrderByTimeDesc(accountId, fromDate, toDate, "%"+search+"%");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

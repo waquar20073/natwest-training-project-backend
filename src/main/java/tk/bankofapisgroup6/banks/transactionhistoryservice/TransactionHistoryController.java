@@ -58,11 +58,18 @@ public class TransactionHistoryController {
 				throw new IllegalStateException("Token not valid");
 			}
 			String search=null;
-			if(requestTransaction.getSearch()==null) {
-				search=""; // default date
+			if(requestTransaction.getSearch()==null || requestTransaction.getSearch().length()<1) {
+				search="";
 			}else {
 				search=requestTransaction.getSearch();
 			}
+			String sortBy =null;
+			if(requestTransaction.getSortBy()==null || requestTransaction.getSortBy().length()<1) {
+				sortBy=""; 
+			}else {
+				sortBy=requestTransaction.getSearch();
+			}
+				
 			if(!validateToken(headers,requestTransaction.getAccountId())) {
 				throw new IllegalStateException("Token not valid");
 			}
