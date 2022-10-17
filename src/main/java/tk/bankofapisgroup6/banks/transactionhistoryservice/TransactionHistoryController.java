@@ -115,9 +115,9 @@ public class TransactionHistoryController {
 	
 	@PostMapping("newtransaction")
 	public ResponseEntity<String> addTransaction(@RequestHeader Map<String, String> headers, @RequestBody TransactionDTO transactiondto) {
-		if(!validateToken(headers,transactiondto.getAccountId())) {
-			throw new IllegalStateException("Token not valid");
-		}
+//		if(!validateToken(headers,transactiondto.getAccountId())) {
+//			throw new IllegalStateException("Token not valid");
+//		}
 		try {
 			Transaction trans = transactionHistoryService.addTransaction(transactiondto);
 			return ResponseEntity.status(HttpStatus.OK).body("Transaction Added");
